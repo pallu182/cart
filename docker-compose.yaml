@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  myapp-frontend:
+    build:
+      context: ./api
+    image: pallu182/cart:2.0
+    depends_on:
+      - myapp-db
+    environment:
+      MY_DB_HOST_WRITE: myapp-db 
+      MY_DB_HOST_READ: myapp-db 
+      MY_DB_NAME: mydatadb 
+      MY_DB_USER: mysqluser 
+      MY_DB_PASS: password
+    ports:
+      - "9000:80"
+    volumes:
+      - type: volume
+        source: myapp-frontend-logvol
+        target: /var/log
+  myapp-db:
+    image: mysql:5.7
+    volumes:
+      - type: volume
+        source: myapp-db-vol
+        target: /var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+volumes:
+  myapp-frontend-logvol:
+  myapp-db-vol:
